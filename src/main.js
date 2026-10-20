@@ -1,5 +1,6 @@
 import './style.css';
 import './effects.css';
+import './content.css';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { animateHero } from './hero.js';
@@ -35,13 +36,20 @@ document.querySelectorAll('[data-filter]').forEach(button => {
     ScrollTrigger.refresh();
   });
 });
-document.querySelectorAll('.service-list details').forEach(detail => {
+document.querySelectorAll('.faq details').forEach(detail => {
   detail.addEventListener('toggle', () => { ScrollTrigger.refresh(); });
 });
 document.querySelector('#year').textContent = new Date().getFullYear();
+document.querySelectorAll('[data-package]').forEach(link => {
+  const message = `Hola Kerno, me interesa el paquete ${link.dataset.package}. Me gustaría contarles mi proyecto.`;
+  link.href = `https://wa.me/5491161120433?text=${encodeURIComponent(message)}`;
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.setAttribute('aria-label', `Consultar por ${link.dataset.package}`);
+});
 
 const motion = gsap.matchMedia();
-const heroHeading = document.querySelector('.hero h1');
+const heroHeading = document.querySelector('.hero-tagline');
 if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) heroHeading.classList.add('hero-preparing');
 document.fonts.ready.then(() => {
 motion.add('(prefers-reduced-motion: no-preference)', () => {
@@ -66,11 +74,11 @@ motion.add('(prefers-reduced-motion: no-preference)', () => {
       });
       line.append(wordSpan);
     });
-    gsap.from(characters, { opacity: 0, stagger: { each: 0.012, from: 'end' }, duration: 0.65, ease: 'power2.out', delay: 1.85 + lineIndex * 0.58 });
+    gsap.from(characters, { opacity: 0, stagger: { each: 0.012, from: 'end' }, duration: 0.65, ease: 'power2.out', delay: 1.85 + lineIndex * 0.58, scrollTrigger: { trigger: heroHeading, start: 'top 95%', once: true } });
   });
   heroHeading.classList.remove('hero-preparing');
   gsap.from('.hero-content > .eyebrow', { opacity: 0, y: 8, duration: 0.7 });
-  gsap.from('.hero-content > p, .hero-actions, .hero-note', { opacity: 0, y: 12, duration: 0.85, stagger: 0.13, delay: 1.9 });
+  gsap.from('.hero-content h1, .hero-content > p, .hero-actions, .hero-note, .hero-trust', { opacity: 0, y: 12, duration: 0.85, stagger: 0.13, delay: 0.15 });
   gsap.from('.orbital', { opacity: 0, y: 28, scale: 0.96, duration: 1.6, delay: 0.65, ease: 'power2.out' });
   gsap.from('.orbit-label', { opacity: 0, y: 12, stagger: 0.2, duration: 0.8, delay: 1.5 });
   document.querySelectorAll('.reveal').forEach(element => {

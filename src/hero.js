@@ -2,7 +2,7 @@ import { gsap } from 'gsap';
 
 export function animateHero() {
   const hero = document.querySelector('.hero');
-  const heading = hero.querySelector('h1');
+  const heading = hero.querySelector('.hero-tagline');
   const lines = [...heading.querySelectorAll('.split-line')];
   const originalText = lines.map(line => line.textContent);
   const canvas = document.createElement('canvas');
@@ -14,12 +14,14 @@ export function animateHero() {
   const headingBounds = heading.getBoundingClientRect();
   const secondLineTop = lines[1].getBoundingClientRect().top - bounds.top;
   const width = Math.ceil(bounds.width);
-  const height = Math.ceil(headingBounds.bottom - bounds.top + 100);
+  const top = Math.max(0, Math.floor(headingBounds.top - bounds.top - 35));
+  const height = Math.ceil(headingBounds.height + 100);
   const density = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width = width * density;
   canvas.height = height * density;
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
+  canvas.style.top = `${top}px`;
   const particles = [];
   // Sample the rendered font silhouette; accessible HTML takes over at the end.
   if (ctx) {
@@ -35,7 +37,7 @@ export function animateHero() {
         ink.letterSpacing = style.letterSpacing;
         ink.textBaseline = 'middle';
         ink.fillStyle = '#fff';
-        ink.fillText(line.textContent, rect.left - bounds.left, rect.top - bounds.top + rect.height / 2);
+        ink.fillText(line.textContent, rect.left - bounds.left, rect.top - bounds.top - top + rect.height / 2);
       });
       const pixels = ink.getImageData(0, 0, width, height).data;
       const spacing = width < 761 ? 3 : 2;
@@ -44,7 +46,7 @@ export function animateHero() {
           if (pixels[(y * width + x) * 4 + 3] > 100) {
             const seed = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
             const random = seed - Math.floor(seed);
-            particles.push({ x, y, secondLine: y >= secondLineTop, dx: width * (0.45 + random * 0.4), dy: (random - 0.5) * 18, phase: random * Math.PI * 2, size: 0.45 + random * 0.55 });
+            particles.push({ x, y, secondLine: y + top >= secondLineTop, dx: width * (0.45 + random * 0.4), dy: (random - 0.5) * 18, phase: random * Math.PI * 2, size: 0.45 + random * 0.55 });
           }
         }
       }
@@ -53,7 +55,7 @@ export function animateHero() {
   }
   const formation = { progress: 0 };
   const easeFormation = gsap.parseEase('power3.inOut');
-  const entrance = gsap.timeline();
+  const entrance = gsap.timeline({ scrollTrigger: { trigger: heading, start: 'top 95%', once: true } });
   if (particles.length) {
     entrance.to(formation, {
       progress: 1.25, duration: 2.9, ease: 'none',
