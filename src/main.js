@@ -1,6 +1,8 @@
 import './style.css';
+import './effects.css';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { animateHero } from './hero.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -39,9 +41,14 @@ document.querySelectorAll('.service-list details').forEach(detail => {
 document.querySelector('#year').textContent = new Date().getFullYear();
 
 const motion = gsap.matchMedia();
+const heroHeading = document.querySelector('.hero h1');
+if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) heroHeading.classList.add('hero-preparing');
+document.fonts.ready.then(() => {
 motion.add('(prefers-reduced-motion: no-preference)', () => {
-  const characters = [];
-  document.querySelectorAll('.split-line').forEach(line => {
+  const cleanupHero = animateHero();
+  heroHeading.classList.add('particle-heading');
+  document.querySelectorAll('.split-line').forEach((line, lineIndex) => {
+    const characters = [];
     const text = line.textContent;
     line.setAttribute('aria-label', text);
     line.textContent = '';
@@ -59,14 +66,17 @@ motion.add('(prefers-reduced-motion: no-preference)', () => {
       });
       line.append(wordSpan);
     });
+    gsap.from(characters, { opacity: 0, stagger: { each: 0.012, from: 'end' }, duration: 0.65, ease: 'power2.out', delay: 1.85 + lineIndex * 0.58 });
   });
-  gsap.from(characters, { yPercent: 105, opacity: 0, rotateX: -45, stagger: 0.027, duration: 1.05, ease: 'power3.out', delay: 0.15 });
-  gsap.from('.hero-content > .eyebrow, .hero-content > p, .hero-actions, .hero-note', { opacity: 0, y: 15, duration: 1, stagger: 0.12, delay: 0.3 });
-  gsap.from('.orbital', { opacity: 0, y: 45, scale: 0.95, duration: 1.8, delay: 0.25, ease: 'power2.out' });
-  gsap.to('.core', { y: -12, duration: 3.8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-  gsap.to('.core-shine', { x: 22, y: -12, duration: 5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  heroHeading.classList.remove('hero-preparing');
+  gsap.from('.hero-content > .eyebrow', { opacity: 0, y: 8, duration: 0.7 });
+  gsap.from('.hero-content > p, .hero-actions, .hero-note', { opacity: 0, y: 12, duration: 0.85, stagger: 0.13, delay: 1.9 });
+  gsap.from('.orbital', { opacity: 0, y: 28, scale: 0.96, duration: 1.6, delay: 0.65, ease: 'power2.out' });
+  gsap.from('.orbit-label', { opacity: 0, y: 12, stagger: 0.2, duration: 0.8, delay: 1.5 });
   document.querySelectorAll('.reveal').forEach(element => {
     gsap.from(element, { y: 32, opacity: 0, duration: 0.9, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 94%', once: true } });
   });
-  gsap.to('.orbital-glow', { opacity: 0.55, scale: 1.12, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  return () => { cleanupHero(); heroHeading.classList.remove('particle-heading'); };
+});
+heroHeading.classList.remove('hero-preparing');
 });

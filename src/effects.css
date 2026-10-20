@@ -1,0 +1,21 @@
+.site-shell{border-color:#8670b44d;box-shadow:0 0 5px #b79aff18,0 0 25px #8055d51c,inset 0 0 2px #d3bdff33}
+.hero{box-shadow:inset 0 -1px 0 #bda2ff0d}
+.hero-particles{position:absolute;top:0;left:0;pointer-events:none;z-index:4}
+.brand-logo{display:block;width:145px;height:auto;mix-blend-mode:screen}
+.core-logo{position:absolute;width:66%;height:auto;left:17%;top:14%;opacity:.7;mix-blend-mode:screen;transform:rotate(-8deg)}
+.studio-logo{position:relative;width:65%;height:auto;mix-blend-mode:screen}
+@media(max-width:760px){.brand-logo{width:125px}}
+.hero h1.hero-preparing{opacity:0}
+/* Only the characters paint the gradient, never the still-visible parent silhouette. */
+.hero .particle-heading>.gradient-text{background:none;-webkit-text-fill-color:inherit}
+.core{background:radial-gradient(ellipse at 35% 22%,#a17bee3d,transparent 35%),radial-gradient(circle at 49% 72%,#ebddff 0,#ac8aff 3%,#7952ec 9%,#47278e 24%,#241448 47%,#110d20 73%);box-shadow:inset 2px 2px 15px #c5aaff22,inset -12px -18px 30px #0006,0 0 55px #7543df2e}
+.core-shine{width:145px;height:65px;left:4px;top:38px;background:radial-gradient(ellipse,#bb9aff88,#9d72ff18 55%,transparent 75%);filter:blur(16px);mix-blend-mode:screen}
+.core:before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(ellipse at 48% 76%,#c6a3ff55,transparent 36%);animation:core-radiance 6s ease-in-out infinite alternate}
+.orbit .satellite{left:50%;top:0;right:auto;bottom:auto;width:4px;height:4px;background:#f0e9ff;box-shadow:0 0 5px 2px #d4bdffaa,0 0 15px 4px #ad83ff55;will-change:transform}
+.orbit-two .satellite{background:#ffe1ad;box-shadow:0 0 5px 1px #ffe1ad99,0 0 15px 3px #e5ad5555}
+.orbit-three .satellite{width:3px;height:3px;box-shadow:0 0 6px 2px #bda5ff99}
+.orbit-two .satellite:after{content:'';position:absolute;inset:-13px;border:1px solid #e9bd7340;border-radius:50%}
+.hero.motion-paused .core:before{animation-play-state:paused}
+@keyframes core-radiance{from{opacity:.4;transform:scale(.9) translate(-4px,3px)}to{opacity:1;transform:scale(1.1) translate(5px,-4px)}}
+@media(max-width:760px){.core-shine{width:105px;height:48px;top:28px;filter:blur(12px)}.orbit-two .satellite:after{inset:-9px}.site-shell{box-shadow:0 0 15px #8055d518}}
+@media(prefers-reduced-motion:reduce){.core:before{animation:none}.hero-particles{display:none}.hero h1.hero-preparing{opacity:1}}
